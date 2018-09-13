@@ -1,0 +1,70 @@
+<h1>Movies to Watch:</h1>
+
+<ul>
+    {{#each movies}}
+    <li>
+        <p>
+            {{this.id}}. {{this.movie}}
+            <br>
+            <button data-movieid="{{this.id}}" class="delmovie">Delete Movie!</button>
+        </p>
+    </li>
+    {{/each}}
+</ul>
+
+<h2>Add a Movie</h2>
+<form id="createmovie" class="button-size">
+    <textarea type="text" name="movie"></textarea><br>
+    <button type="submit">Add Movie!</button><br>
+</form>
+
+<h2>Change a Movie</h2>
+<form id="updatemovie" class="button-size">
+    <select name="id">
+        {{#each movies}}
+        <option value="{{this.id}}">{{this.movie}}</option>
+        {{/each}}
+    </select><br>
+    <textarea type="text" name="movie" placeholder="movie"></textarea><br>
+    <button type="submit">Update Movie!</button><br>
+</form>
+
+<script type="text/javascript">
+
+    $("#createmovie").on("submit", function (event) {
+        event.preventDefault();
+        var newMovie = {
+            movie: $("#createmovie [name=movie]").val().trim()
+        };
+        $.ajax("/movies", {
+            method: "POST",
+            data: newMovie
+        }).then(function () {
+            location.reload();
+        });
+    });
+
+    $(".delmovie").on("click", function (event) {
+        var id = $(this).attr("data-movieid");
+        $.ajax("/movies/" + id, {
+            method: "DELETE"
+        }).then(function () {
+            location.reload();
+        });
+    });
+
+    $("#updatemovie").on("submit", function (event) {
+        event.preventDefault();
+        var id = $("[name=id]").val().trim();
+        var updatedMovie = {
+            movie: $("#updatemovie [name=movie]").val().trim()
+        };
+        $.ajax("/movies/" + id, {
+            method: "PUT",
+            data: updatedMovie
+        }).then(function () {
+            location.reload();
+        })
+    })
+
+</script>
