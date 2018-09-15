@@ -1,18 +1,15 @@
-var orm = require("./config/orm");
 var express = require("express");
 var bodyParser = require("body-parser");
-var exphbs = require("express-handlebars");
+var PORT = process.env.PORT || 9000;
 var app = express();
-var PORT = process.env.PORT || 8080;
+app.use(express.static("public"));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
+var exphbs = require("express-handlebars");
 app.engine("handlebars", exphbs({ defaultLayout: "main" }));
 app.set("view engine", "handlebars");
-
-app.get("/", selectFunc("tasks"));
-app.post("/tasks", insertFunc("tasks", "task", newMovie));
-app.put("/tasks/:id", updateFunc("tasks", req.body.task, req.params.id));
-app.delete("/tasks/:id", deleteFunc("tasks", req.params.id));
+var routes = require("./controllers/PCcontroller.js");
+app.use(routes);
 
 app.listen(PORT, function () {
     console.log("Server listening on: http://localhost:" + PORT);

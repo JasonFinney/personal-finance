@@ -1,70 +1,38 @@
-<h1>Pseudocode:</h1>
+<h1>Pseudocode</h1>
+
+<h2>Items that have not been completed</h2>
 
 <ul>
     {{#each tasks}}
-    <li>
-        <p>
-            {{this.id}}. {{this.task}}
-            <br>
-            <button data-taskid="{{this.id}}" class="deltask">Delete Movie!</button>
-        </p>
-    </li>
+    {{#unless completed}}
+    {{> PC/PC-block completed=true}}
+    {{/unless}}
     {{/each}}
 </ul>
 
-<h2>Add a task</h2>
-<form id="createtask" class="button-size">
-    <textarea type="text" name="task"></textarea><br>
-    <button type="submit">Add task!</button><br>
+<h2>Items that have been completed</h2>
+
+<ul>
+    {{#each tasks}}
+    {{#if completed}}
+    {{> PC/PC-block completed=false}}
+    {{/if}}
+    {{/each}}
+</ul>
+
+<h2>Add a Task</h2>
+<form class="create-form">
+
+    <div class="form-group">
+        <label for="ca">Task Name:</label>
+        <input type="text" id="ca" name="name">
+    </div>
+
+    <div class="form-group">
+        <label for="completed">completed?</label><br>
+        <input type="radio" name="completed" value="1" checked> completed<br>
+        <input type="radio" name="completed" value="0"> not completed
+    </div>
+
+    <button type="submit">Add Task</button>
 </form>
-
-<h2>Change a Task</h2>
-<form id="updatetask" class="button-size">
-    <select name="id">
-        {{#each tasks}}
-        <option value="{{this.id}}">{{this.task}}</option>
-        {{/each}}
-    </select><br>
-    <textarea type="text" name="task" placeholder="task"></textarea><br>
-    <button type="submit">Update Task!</button><br>
-</form>
-
-<script type="text/javascript">
-
-    $("#createtask").on("submit", function (event) {
-        event.preventDefault();
-        var newtask = {
-            task: $("#createtask [name=task]").val().trim()
-        };
-        $.ajax("/tasks", {
-            method: "POST",
-            data: newMovie
-        }).then(function () {
-            location.reload();
-        });
-    });
-
-    $(".deltask").on("click", function (event) {
-        var id = $(this).attr("data-taskid");
-        $.ajax("/tasks/" + id, {
-            method: "DELETE"
-        }).then(function () {
-            location.reload();
-        });
-    });
-
-    $("#updatetask").on("submit", function (event) {
-        event.preventDefault();
-        var id = $("[name=id]").val().trim();
-        var updatedTask = {
-            task: $("#updatetask [name=task]").val().trim()
-        };
-        $.ajax("/tasks/" + id, {
-            method: "PUT",
-            data: updatedTask
-        }).then(function () {
-            location.reload();
-        })
-    })
-
-</script>
