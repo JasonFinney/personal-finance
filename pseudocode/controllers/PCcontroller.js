@@ -19,6 +19,7 @@ router.post("/api/tasks", function (req, res) {
     ], [
             req.body.name, req.body.completed
         ], function (result) {
+            console.log("name: " + req.body.name + "completed: " + req.body.completed);
             res.json({ id: result.insertId });
         });
 });

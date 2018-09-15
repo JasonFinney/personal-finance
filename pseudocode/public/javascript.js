@@ -22,6 +22,7 @@ $(function () {
 
     $(".create-form").on("submit", function (event) {
         // Make sure to preventDefault on a submit event.
+        console.log("your here!");
         event.preventDefault();
 
         var newTask = {
